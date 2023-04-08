@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <script defer src="/js/jquery-3.6.1.js"></script>
+    <script defer src="/js/register.js"></script>
+</head>
+<body>
+<div class="container text-left my-2">
+    <h1 th:text="#{msg.register}"></h1>
+    <form class="input-form">
+        <label for="input-username" th:text="#{msg.register.username}"></label>
+        <input id="input-username" type="text" required/>
+        <br/>
+        <label for="input-email" th:text="#{msg.register.email}"></label>
+        <input id="input-email" type="text" required/>
+        <br/>
+        <button class="create" th:text="#{msg.register}"></button>
+    </form>
+</div>
+</body>
+</html>

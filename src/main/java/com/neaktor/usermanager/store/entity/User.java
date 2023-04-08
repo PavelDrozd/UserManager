@@ -54,6 +54,11 @@ public class User {
         ONLINE, OFFLINE
     }
 
+    public void addImageToUser(Image image) {
+        image.setUser(this);
+        images.add(image);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

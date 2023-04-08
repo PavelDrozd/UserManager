@@ -17,6 +17,7 @@ public class UserViewController {
     private static final String ATTR_USER = "user";
 
     private static final String USER_PAGE = "user";
+    private static final String USER_REGISTER_PAGE = "register";
 
     private final UserService userService;
 
@@ -25,6 +26,11 @@ public class UserViewController {
         UserDto user = userService.get(id);
         model.addAttribute(ATTR_USER, user);
         return USER_PAGE;
+    }
+
+    @GetMapping("/register")
+    public String register(){
+        return USER_REGISTER_PAGE;
     }
 
 }

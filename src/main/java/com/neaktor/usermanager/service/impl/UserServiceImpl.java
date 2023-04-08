@@ -5,12 +5,16 @@ import com.neaktor.usermanager.service.UserService;
 import com.neaktor.usermanager.shared.exception.service.ServiceNotFoundException;
 import com.neaktor.usermanager.shared.exception.service.ServiceValidationException;
 import com.neaktor.usermanager.shared.util.mapper.EntityDtoMapper;
+import com.neaktor.usermanager.store.entity.Image;
 import com.neaktor.usermanager.store.entity.User;
 import com.neaktor.usermanager.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +27,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto userDto) {
         checkUserNull(userDto);
+        userDto.setStatus(UserDto.Status.OFFLINE);
         User user = userRepository.save(mapper.mapToUser(userDto));
+        return mapper.mapToUserDto(user);
+    }
+
+    @Override
+    public UserDto create(UserDto userDto, MultipartFile file) {
+        checkUserNull(userDto);
+        User user = userRepository.save(mapper.mapToUser(userDto));
+        Image image;
+        if (file.getSize() != 0) {
+            image = toImageEntity(file);
+            image.setPreviewImage(true);
+            user.addImageToUser(image);
+        }
         return mapper.mapToUserDto(user);
     }
 
@@ -64,5 +82,19 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             throw new ServiceValidationException("ID is null");
         }
+    }
+
+    private Image toImageEntity(MultipartFile file) {
+        Image image = new Image();
+        image.setName(file.getName());
+        image.setFileName(file.getOriginalFilename());
+        image.setContentType(file.getContentType());
+        image.setSize(file.getSize());
+        try {
+            image.setBytes(file.getBytes());
+        } catch (IOException e) {
+            throw new ServiceValidationException(e);
+        }
+        return image;
     }
 }
