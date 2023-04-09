@@ -56,7 +56,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private void checkImageNull(ImageDto imageDto) {
-        if(imageDto == null) {
+        if (imageDto == null) {
             throw new ServiceValidationException("Image is null");
         }
     }

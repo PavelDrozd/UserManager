@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserViewController {
 
     private static final String ATTR_USER = "user";
+    private static final String ATTR_IMAGES = "images";
 
     private static final String USER_PAGE = "user";
     private static final String USER_REGISTER_PAGE = "register";
@@ -25,11 +26,12 @@ public class UserViewController {
     public String get(@PathVariable Long id, Model model) {
         UserDto user = userService.get(id);
         model.addAttribute(ATTR_USER, user);
+        model.addAttribute(ATTR_IMAGES, user.getImages());
         return USER_PAGE;
     }
 
     @GetMapping("/register")
-    public String register(){
+    public String register() {
         return USER_REGISTER_PAGE;
     }
 

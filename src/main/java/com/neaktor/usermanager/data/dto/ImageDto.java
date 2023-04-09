@@ -1,8 +1,10 @@
 package com.neaktor.usermanager.data.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +24,9 @@ public class ImageDto {
     private boolean isPreviewImage;
 
     private byte[] bytes;
+
+    @ToString.Exclude
+    @JsonIgnore
+    private UserDto user;
 
 }

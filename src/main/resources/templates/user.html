@@ -9,19 +9,22 @@
     <tr>
         <td th:text="#{msg.user.id}"></td>
         <td th:text="${user.id}"></td>
-    <tr>
+    </tr>
     <tr>
         <td th:text="#{msg.user.username}"></td>
         <td th:text="${user.username}"></td>
-    <tr>
+    </tr>
     <tr>
         <td th:text="#{msg.user.email}"></td>
         <td th:text="${user.email}"></td>
-    <tr>
+    </tr>
     <tr>
         <td th:text="#{msg.user.status}"></td>
         <td th:text="${user.status}"></td>
-    <tr>
+    </tr>
+    <div th:each="image : ${images}">
+        <img th:src="@{/api/images/{id}(id=${image.id})}" th:alt="image" th:height="100px">
+    </div>
 </table>
 </body>
 </html>

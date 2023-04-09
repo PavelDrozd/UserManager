@@ -4,17 +4,22 @@ $(function() {
 
 	function sendData(e) {
 		e.preventDefault();
+		let formData = new FormData();
 		const username = $("#input-username").val();
 		const email = $("#input-email").val();
 		const user = {username, email};
+		formData.append("user", JSON.stringify(user));
+		formData.append("file1", $("#input-file1")[0].files[0]);
+		formData.append("file2", $("#input-file2")[0].files[0]);
+		formData.append("file3", $("#input-file3")[0].files[0]);
 		$.ajax({
-			type: "POST",
 			url: "/api/users/register",
-			data: JSON.stringify(user),
+			method: "POST",
+			data: formData,
+			processData: false,
+            contentType: false,
 			success: processCreated,
 			error: processError,
-			dataType: "json",
-			contentType: "application/json"
 		});
 	}
 

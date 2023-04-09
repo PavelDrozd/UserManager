@@ -7,6 +7,7 @@ import com.neaktor.usermanager.shared.exception.service.ServiceValidationExcepti
 import com.neaktor.usermanager.shared.util.mapper.EntityDtoMapper;
 import com.neaktor.usermanager.store.entity.Image;
 import com.neaktor.usermanager.store.entity.User;
+import com.neaktor.usermanager.store.repository.ImageRepository;
 import com.neaktor.usermanager.store.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,12 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ImageRepository imageRepository;
 
     private final EntityDtoMapper mapper;
 
@@ -33,15 +36,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto create(UserDto userDto, MultipartFile file) {
+    public UserDto create(UserDto userDto, List<MultipartFile> files) {
         checkUserNull(userDto);
+        userDto.setStatus(UserDto.Status.OFFLINE);
         User user = userRepository.save(mapper.mapToUser(userDto));
-        Image image;
-        if (file.getSize() != 0) {
-            image = toImageEntity(file);
-            image.setPreviewImage(true);
-            user.addImageToUser(image);
-        }
+        processImage(files, user);
         return mapper.mapToUserDto(user);
     }
 
@@ -84,17 +83,32 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private void processImage(List<MultipartFile> files, User user) {
+        for (MultipartFile file : files) {
+            if (file.getSize() != 0) {
+                Image image = toImageEntity(file);
+                image.setUser(user);
+                imageRepository.save(image);
+                user.addImageToUser(image);
+            }
+        }
+    }
+
     private Image toImageEntity(MultipartFile file) {
         Image image = new Image();
         image.setName(file.getName());
         image.setFileName(file.getOriginalFilename());
         image.setContentType(file.getContentType());
         image.setSize(file.getSize());
+        processBytes(file, image);
+        return image;
+    }
+
+    private void processBytes(MultipartFile file, Image image) {
         try {
             image.setBytes(file.getBytes());
         } catch (IOException e) {
             throw new ServiceValidationException(e);
         }
-        return image;
     }
 }
