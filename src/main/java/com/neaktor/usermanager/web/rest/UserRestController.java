@@ -8,6 +8,7 @@ import com.neaktor.usermanager.shared.exception.controller.ControllerValidationE
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,17 +37,13 @@ public class UserRestController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> create(@RequestParam("user") String userJson,
-                                          @RequestParam("file1") MultipartFile file1,
-                                          @RequestParam("file2") MultipartFile file2,
-                                          @RequestParam("file3") MultipartFile file3) {
-        List<MultipartFile> files = new ArrayList<>();
-        files.add(file1);
-        files.add(file2);
-        files.add(file3);
+                                          @RequestParam("file1")@Nullable MultipartFile file1,
+                                          @RequestParam("file2")@Nullable MultipartFile file2,
+                                          @RequestParam("file3")@Nullable MultipartFile file3) {
         ObjectMapper objectMapper = new ObjectMapper();
         UserDto user;
         user = processUserJson(userJson, objectMapper);
-        UserDto createdUser = userService.create(user, files);
+        UserDto createdUser = userService.create(user, processFiles(file1, file2, file3));
         return buildResponseUser(createdUser);
     }
 
@@ -58,6 +55,16 @@ public class UserRestController {
             throw new RuntimeException(e);
         }
         return user;
+    }
+
+    private List<MultipartFile> processFiles(MultipartFile... multipartFiles){
+        List<MultipartFile> files = new ArrayList<>();
+        for (MultipartFile multipartFile:multipartFiles) {
+            if (multipartFile != null) {
+                files.add(multipartFile);
+            }
+        }
+        return files;
     }
 
     private void checkErrors(Errors errors) {

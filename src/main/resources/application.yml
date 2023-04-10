@@ -12,10 +12,12 @@ spring:
         max-page-size: 25
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/usermanager
-    username: root
+    url: jdbc:mysql://mysql:3306/usermanager
+    username: user
     password: root
+    hikari:
+      connection-timeout: 60000
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update

@@ -13,7 +13,7 @@ public class DelayInterceptor {
 
     @Around("execution(* com.neaktor.usermanager.service.impl.*.*(..))")
     public Object delayMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        Thread.sleep(new Random().nextInt(5000) + 5000);
+        Thread.sleep(new Random().nextInt(2000) + 3000);
         return joinPoint.proceed();
     }
 }
