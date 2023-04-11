@@ -25,6 +25,7 @@ public class UserViewController {
     private static final String INDEX_PAGE = "index";
     private static final String USER_PAGE = "user";
     private static final String USER_REGISTER_PAGE = "register";
+    private static final String USER_CREATE_PAGE = "create";
 
     private final UserService userService;
 
@@ -34,6 +35,11 @@ public class UserViewController {
         model.addAttribute(ATTR_USER, user);
         model.addAttribute(ATTR_IMAGES, user.getImages());
         return USER_PAGE;
+    }
+
+    @GetMapping("/create")
+    public String create() {
+        return USER_CREATE_PAGE;
     }
 
     @GetMapping("/register")

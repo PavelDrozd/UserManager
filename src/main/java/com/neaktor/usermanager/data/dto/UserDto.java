@@ -26,4 +26,8 @@ public class UserDto {
         ONLINE, OFFLINE
     }
 
+    public void addImageDtoToUserDto(ImageDto image) {
+        image.setUser(this);
+        images.add(image);
+    }
 }

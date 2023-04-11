@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create</title>
+    <script defer src="/js/jquery-3.6.1.js"></script>
+    <script defer src="/js/create.js"></script>
+</head>
+<body>
+<div class="container text-left my-2">
+    <h1 th:text="#{msg.create}"></h1>
+    <form class="input-form">
+        <label for="input-username" th:text="#{msg.create.username}"></label>
+        <input id="input-username" type="text" required/>
+        <br/>
+        <label for="input-email" th:text="#{msg.create.email}"></label>
+        <input id="input-email" type="text" required/>
+        <br/>
+        <label for="input-uri" th:text="#{msg.create.uri}"></label>
+        <input id="input-uri" type="text" required/>
+        <br/>
+        <button class="create" th:text="#{msg.create}"></button>
+    </form>
+</div>
+</body>
+</html>
