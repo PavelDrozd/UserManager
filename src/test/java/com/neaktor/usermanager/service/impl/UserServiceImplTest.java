@@ -2,7 +2,6 @@ package com.neaktor.usermanager.service.impl;
 
 import com.neaktor.usermanager.data.dto.UserDto;
 import com.neaktor.usermanager.service.UserService;
-import com.neaktor.usermanager.shared.exception.service.ServiceNotFoundException;
 import com.neaktor.usermanager.shared.exception.service.ServiceValidationException;
 import com.neaktor.usermanager.shared.util.mapper.EntityDtoMapper;
 import com.neaktor.usermanager.store.entity.User;
@@ -15,19 +14,17 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserServiceImplTest {
 
     private static UserService userService;
 
     private static final Long INVALID_USER_ID = Long.MIN_VALUE;
-    private static final Long INVALID_USER_MAX_ID = Long.MAX_VALUE;
     private static final Long VALID_USER_ID = 1L;
-    private static final String INVALID_USER_USERNAME = "n";
     private static final String VALID_USER_USERNAME = "test";
     private static final String INVALID_USER_EMAIL = "email";
-    private static final String VALID_USER_EMAIL = "test@gmail.com";
 
     @BeforeAll
     static void beforeAll() {
