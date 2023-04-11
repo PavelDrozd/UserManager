@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto userDto) {
         checkUserNull(userDto);
+        checkEmail(userDto.getEmail());
         userDto.setStatus(UserDto.Status.OFFLINE);
         User user = userRepository.save(mapper.mapToUser(userDto));
         return mapper.mapToUserDto(user);
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto create(UserDto userDto, List<MultipartFile> files) {
         checkUserNull(userDto);
+        checkEmail(userDto.getEmail());
         userDto.setStatus(UserDto.Status.OFFLINE);
         User user = userRepository.save(mapper.mapToUser(userDto));
         processImage(files, user);
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto get(Long id) {
-        checkIdNull(id);
+        checkId(id);
         return userRepository.findById(id)
                 .map(mapper::mapToUserDto)
                 .orElseThrow(() -> new ServiceNotFoundException("User with id: " + id + " doesn't exist"));
@@ -60,13 +62,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(UserDto userDto) {
         checkUserNull(userDto);
+        checkId(userDto.getId());
+        checkEmail(userDto.getEmail());
         User user = userRepository.save(mapper.mapToUser(userDto));
         return mapper.mapToUserDto(user);
     }
 
     @Override
     public void delete(Long id) {
-        checkIdNull(id);
+        checkId(id);
         userRepository.findById(id).orElseThrow(() -> new ServiceNotFoundException("User with id: " + id + " doesn't exist"));
         userRepository.deleteById(id);
     }
@@ -77,9 +81,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void checkIdNull(Long id) {
+    private void checkId(Long id) {
         if (id == null) {
             throw new ServiceValidationException("ID is null");
+        }
+        if (id < 0L) {
+            throw new ServiceValidationException("ID less than 0");
+        }
+    }
+
+    private void checkEmail(String email) {
+        if (!email.contains("@")){
+            throw new ServiceValidationException("Invalid email");
         }
     }
 
